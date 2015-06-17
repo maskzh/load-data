@@ -1,0 +1,30 @@
+/**
+ * @name 分页
+ * @authors zyc
+ * @date    2015-04-29 10:48:48
+ * @version 1.0
+ */
+.ui-pagination{display:inline-block;padding-left:0;margin:20px 0;font-size:12px;}
+.ui-pagination > li{display:inline-block;margin-left: 3px;margin-right: 3px;}
+.ui-pagination > li > a,
+.ui-pagination > li > span{position:relative;display:inline-block;width:24px;height:24px;line-height:24px;color:#01abff;text-align:center;border:1px solid #01abff;border-radius:50%;}
+.ui-pagination > li > a:hover,
+.ui-pagination > li > span:hover,
+.ui-pagination > li > a:focus,
+.ui-pagination > li > span:focus,
+.ui-pagination > li.next > a:hover,
+.ui-pagination > li.prev > a:hover{color:#ff6400;border-color:#ff6400;}
+.ui-pagination > li.next > a,
+.ui-pagination > li.prev > a{width:55px;color:#01abff;border:0;border-radius:0;}
+.ui-pagination > li.active > a,
+.ui-pagination > li.active > span,
+.ui-pagination > li.active > a:hover,
+.ui-pagination > li.active > span:hover,
+.ui-pagination > li.active > a:focus,
+.ui-pagination > li.active > span:focus{z-index:2;color:#ffffff;cursor:default;background-color:#01abff;border-color:#01abff;}
+.ui-pagination > li.disabled > span,
+.ui-pagination > li.disabled > span:hover,
+.ui-pagination > li.disabled > span:focus,
+.ui-pagination > li.disabled > a,
+.ui-pagination > li.disabled > a:hover,
+.ui-pagination > li.disabled > a:focus{color:#aaa;border:0;border-radius:0;cursor: default;}
