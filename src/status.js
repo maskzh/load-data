@@ -1,4 +1,6 @@
-var $ = require('jquery');
+define(function(require, exports, module){
+// var $ = require('jquery');
+require('jquery');
 var status = {
 
     /* 没有数据 添加样式 */
@@ -68,3 +70,4 @@ function newGuid() {
     }
     return guid;
 }
+});

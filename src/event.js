@@ -1,3 +1,5 @@
+define(function(require, exports, module){
+
 var global = this,
 Event,
 _default = 'default';
@@ -97,24 +99,39 @@ Event = function(){
             namespaceCache[ namespace ] = ret )
         : ret;
     };
+    function spliteKey(key){
+        var namespace,
+            type,
+            tmp = key.split('.');
+
+        return tmp.length === 2 ? {type: tmp[0],namespace: tmp[1]} : {type: key, namespace: ""};
+    }
+
     return {
         create: _create,
-        one: function( key,fn, last ){
-            var event = this.create( );
-            event.one( key,fn,last );
+        one: function( key, fn, last ){
+            var obj = spliteKey(key);
+            var event = this.create(obj.namespace);
+            event.one( obj.type, fn, last );
         },
-        remove: function( key,fn ){
-            var event = this.create( );
-            event.remove( key,fn );
+        remove: function( key, fn ){
+            var obj = spliteKey(key)
+            var event = this.create(obj.namespace);
+            event.remove( obj.type, fn );
         },
         listen: function( key, fn, last ){
-            var event = this.create( );
-            event.listen( key, fn, last );
+            var obj = spliteKey(key)
+            var event = this.create(obj.namespace);
+            event.listen( obj.type, fn, last );
         },
         trigger: function(){
-            var event = this.create( );
+            var key = _shift.call(arguments);
+            var obj = spliteKey(key);
+            var event = this.create(obj.namespace);
+            _unshift.call(arguments, obj.type);
             event.trigger.apply( this, arguments );
         }
     };
 }();
 module.exports = Event;
+});

@@ -1,11 +1,13 @@
-var $ = require('jquery'),
-    event = require('./event');
+define(function(require, exports, module){
+
+require('jquery');
+var event = require('module/event');
 
 // sendData中的参数命名
-var PAGE = 'page',
-    PAGECOUNT = 'pageCount';
+var PAGE = 'currentPage',
+    PAGECOUNT = 'pages';
 
-var PAGINATION_CLASS = 'ui-pagination',
+var PAGINATION_CLASS = 'qianui_pagination',
     PAGINATION_PREV_CLASS = 'prev',
     PAGINATION_NEXT_CLASS = 'next',
     ACTIVE_CLASS = 'active',
@@ -21,6 +23,7 @@ Paging.prototype = {
         this.container = args.container;
         this.sendData = args.sendData;
         this.load = args.load;
+        this._eventId = args.eventId;
         this.sendData.get(PAGE) || this.sendData.set(PAGE, 1);
     },
 
@@ -30,8 +33,10 @@ Paging.prototype = {
     },
 
     listen: function(){
-        var self = this;
-        event.one('backData', function(backData){
+        var self = this,
+            _eventId = this._eventId;
+
+        event.one('backData.' + _eventId, function(backData){
             var container = self.container;
 
             var page = self.page = backData.get(PAGE);
@@ -69,6 +74,7 @@ PagingWithNumber.prototype._paging = function(page, pageCount){
     var _pageCountSeparator = 10,
         _pageSeparator = 5;
 
+
     var _tpl = {
         prev: '<li class="' + PAGINATION_PREV_CLASS + '"><a href="javascript:;"><span>&laquo;</span> <span>上一页</span></a></li>',
         next: '<li class="' + PAGINATION_NEXT_CLASS + '"><a href="javascript:;"><span>下一页</span> <span>&raquo;</span></a></li>',
@@ -89,8 +95,9 @@ PagingWithNumber.prototype._paging = function(page, pageCount){
                     }
                 }
 
-                return;
+                return false;
             }
+            return true;
         };
 
         var _pageCountG = {
@@ -106,11 +113,13 @@ PagingWithNumber.prototype._paging = function(page, pageCount){
                     itemHtml += _tpl.item.replace(/{{page}}/g, '...').replace(/{{status}}/, DISABLED_CLASS);
                     itemHtml += _tpl.item.replace(/{{page}}/g, pageCount).replace(/{{status}}/, '');
 
-                    return;
+                    return false;
                 }
+                return true;
             },
             pageInMiddle: function(){
                 if(page >= _pageSeparator && page <= pageCount - _pageSeparator - 1){
+                    console.log('fefe2')
                     itemHtml += _tpl.item.replace(/{{page}}/g, 1).replace(/{{status}}/, '');
                     itemHtml += _tpl.item.replace(/{{page}}/g, '...').replace(/{{status}}/, DISABLED_CLASS);
                     for (var i = page - 2; i <= page + 2; i++) {
@@ -123,11 +132,13 @@ PagingWithNumber.prototype._paging = function(page, pageCount){
                     itemHtml += _tpl.item.replace(/{{page}}/g, '...').replace(/{{status}}/, DISABLED_CLASS);
                     itemHtml += _tpl.item.replace(/{{page}}/g, pageCount).replace(/{{status}}/, '');
 
-                    return;
+                    return false;
                 }
+                return true;
             },
             pageInEnd: function(){
                 if(page > pageCount - _pageSeparator - 1){
+                    console.log('fefe3')
                     itemHtml += _tpl.item.replace(/{{page}}/g, 1).replace(/{{status}}/, '');
                     itemHtml += _tpl.item.replace(/{{page}}/g, '...').replace(/{{status}}/, DISABLED_CLASS);
                     for (var i = _pageSeparator - 1; i >= 0; i--) {
@@ -138,18 +149,20 @@ PagingWithNumber.prototype._paging = function(page, pageCount){
                         }
                     }
 
-                    return;
+                    return false;
                 }
+                return true;
             }
         };
 
-        _pageCountL();
-        _pageCountG.pageInStart();
-        _pageCountG.pageInMiddle();
-        _pageCountG.pageInEnd();
+        eachFn([_pageCountL, _pageCountG.pageInStart, _pageCountG.pageInMiddle, _pageCountG.pageInEnd]);
+        // _pageCountL();
+        // _pageCountG.pageInStart();
+        // _pageCountG.pageInMiddle();
+        // _pageCountG.pageInEnd();
 
         return itemHtml;
-    }
+    };
 
     function replaceHtml(){
         var itemHtml = generateItems();
@@ -188,7 +201,7 @@ PagingWithNumber.prototype._bindHandler = function(){
         sendData.set(PAGE, page);
         load();
         if(container.offset().top <= $("body").scrollTop() || container.offset().top <= $("html").scrollTop()){
-            $("html,body").scrollTop(content.offset().top-150);
+            $("html,body").scrollTop(container.offset().top-150);
         }
     }
 };
@@ -200,3 +213,17 @@ function pagingFactory(pageType){
 }
 
 module.exports = pagingFactory;
+});
+//  helper
+function eachFn(fnArr){
+    var value,
+        i = 0,
+        length = fnArr.length;
+
+    for ( ; i < length; i++ ) {
+        value = fnArr[i]();
+        if ( typeof value === 'undefined' || value === 'false') {
+            break;
+        }
+    }
+}
