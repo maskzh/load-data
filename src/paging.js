@@ -1,7 +1,7 @@
 define(function(require, exports, module){
 
-require('jquery');
-var event = require('module/event');
+var $ = require('jquery'),
+    event = require('module/event');
 
 // sendData中的参数命名
 var PAGE = 'currentPage',
@@ -156,10 +156,6 @@ PagingWithNumber.prototype._paging = function(page, pageCount){
         };
 
         eachFn([_pageCountL, _pageCountG.pageInStart, _pageCountG.pageInMiddle, _pageCountG.pageInEnd]);
-        // _pageCountL();
-        // _pageCountG.pageInStart();
-        // _pageCountG.pageInMiddle();
-        // _pageCountG.pageInEnd();
 
         return itemHtml;
     };
@@ -222,7 +218,7 @@ function eachFn(fnArr){
 
     for ( ; i < length; i++ ) {
         value = fnArr[i]();
-        if ( typeof value === 'undefined' || value === 'false') {
+        if ( typeof value === 'undefined' || value === false ) {
             break;
         }
     }

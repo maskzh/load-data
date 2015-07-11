@@ -1,8 +1,7 @@
 define(function(require, exports, module){
 
-    require('jquery');
-
-var handlebars = require('handlebars'),
+var $ = require('jquery'),
+    handlebars = require('handlebars'),
     event      = require('module/event'),
     paging     = require('module/paging'),
     status     = require('module/status');
